@@ -90,7 +90,7 @@ export function CryptoTable({ initialData, messages }: CryptoTableProps) {
         {cryptoData.map((crypto) => (
           <div
             key={crypto.id}
-            className="bg-card border border-border rounded-lg p-4 space-y-3 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer transition-colors hover:bg-muted/50"
+            className="bg-card border border-border rounded-lg p-4 space-y-3 focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer transition-colors hover:bg-muted/50"
             role="listitem"
             tabIndex={0}
             onKeyDown={(e) => {
