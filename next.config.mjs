@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Build optimizations
-  swcMinify: true,
   compress: true,
 
   // Performance optimizations
@@ -37,15 +36,17 @@ const nextConfig = {
       'lucide-react',
       'recharts',
     ],
-    turbo: {
-      rules: {
-        '*.svg': {
-          loaders: ['@svgr/webpack'],
-          as: '*.js',
-        },
+    webVitalsAttribution: ['CLS', 'LCP'],
+  },
+
+  // Turbopack configuration (moved from experimental.turbo)
+  turbopack: {
+    rules: {
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.js',
       },
     },
-    webVitalsAttribution: ['CLS', 'LCP'],
   },
 
   // Image optimization
