@@ -1,0 +1,26 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "retry": "Retry",
+    "darkMode": "Dark mode",
+    "lightMode": "Light mode"
+  },
+  "crypto": {
+    "title": "Crypto Price Tracker",
+    "description": "Real-time cryptocurrency prices and market data",
+    "rank": "Rank",
+    "name": "Name",
+    "price": "Price",
+    "change24h": "24h Change",
+    "marketCap": "Market Cap",
+    "currency": "Currency",
+    "language": "Language",
+    "fetchError": "Failed to fetch cryptocurrency data",
+    "noData": "No cryptocurrency data available"
+  },
+  "navigation": {
+    "home": "Home",
+    "settings": "Settings"
+  }
+}

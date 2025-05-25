@@ -1,0 +1,26 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "retry": "Reintentar",
+    "darkMode": "Modo oscuro",
+    "lightMode": "Modo claro"
+  },
+  "crypto": {
+    "title": "Rastreador de Precios Crypto",
+    "description": "Precios de criptomonedas y datos de mercado en tiempo real",
+    "rank": "Rango",
+    "name": "Nombre",
+    "price": "Precio",
+    "change24h": "Cambio 24h",
+    "marketCap": "Cap. de Mercado",
+    "currency": "Moneda",
+    "language": "Idioma",
+    "fetchError": "Error al obtener datos de criptomonedas",
+    "noData": "No hay datos de criptomonedas disponibles"
+  },
+  "navigation": {
+    "home": "Inicio",
+    "settings": "Configuración"
+  }
+}
