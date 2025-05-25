@@ -1,10 +1,11 @@
 import { CryptoSkeleton } from '@/components/crypto-skeleton';
 import { DynamicHeader } from '@/components/dynamic-header';
 import { getMessagesSync } from '@/lib/messages';
-import { getServerLocale } from '@/lib/server-locale';
+import { getStaticLocale } from '@/lib/server-locale';
 
 export default async function Loading() {
-  const locale = await getServerLocale();
+  // Use static locale for loading page to avoid dynamic server usage
+  const locale = getStaticLocale();
   const messages = getMessagesSync(locale);
 
   return (

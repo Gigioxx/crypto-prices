@@ -8,10 +8,10 @@ import { ErrorBoundary } from '@/components/error-boundary';
 import { Footer } from '@/components/footer';
 import { fetchCryptoPrices } from '@/lib/coingecko';
 import { getMessagesSync } from '@/lib/messages';
-import { getServerLocale } from '@/lib/server-locale';
+import { getStaticLocale } from '@/lib/server-locale';
 
 export async function generateMetadata() {
-  const locale = await getServerLocale();
+  const locale = getStaticLocale();
   const messages = getMessagesSync(locale);
 
   return {
@@ -36,14 +36,14 @@ export async function generateMetadata() {
 
 async function CryptoData() {
   try {
-    const locale = await getServerLocale();
+    const locale = getStaticLocale();
     const messages = getMessagesSync(locale);
     const initialData = await fetchCryptoPrices('USD', 20);
 
     return <CryptoTable initialData={initialData} messages={messages} />;
   } catch (error) {
     console.error('Failed to fetch initial crypto data:', error);
-    const locale = await getServerLocale();
+    const locale = getStaticLocale();
     const messages = getMessagesSync(locale);
 
     return (
@@ -55,7 +55,7 @@ async function CryptoData() {
 }
 
 export default async function HomePage() {
-  const locale = await getServerLocale();
+  const locale = getStaticLocale();
   const messages = getMessagesSync(locale);
 
   return (
