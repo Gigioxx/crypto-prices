@@ -1,11 +1,14 @@
 'use client';
 
-import { RefreshCw, TrendingDown, TrendingUp } from 'lucide-react';
+import { Clock, RefreshCw, TrendingDown, TrendingUp } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import useSWR from 'swr';
 
 import { useSettings } from '@/components/settings-provider';
 import { Button } from '@/components/ui/button';
+import { CryptoCache } from '@/lib/cache';
+import { CacheDebug } from '@/lib/cache-debug';
+import { cryptoFetcher, cryptoSWRConfig, getInitialData } from '@/lib/swr-config';
 import { debounce, formatCurrency, formatMarketCap, formatPercentage } from '@/lib/utils';
 import type { CryptoCurrency } from '@/types/crypto';
 
@@ -25,6 +28,11 @@ interface CryptoTableProps {
       rateLimitMessage: string;
       fallbackMessage: string;
       pleaseWait: string;
+      lastUpdated: string;
+      dataStatus: {
+        fresh: string;
+        cached: string;
+      };
     };
     common: {
       retry: string;
@@ -33,22 +41,12 @@ interface CryptoTableProps {
   };
 }
 
-const fetcher = async (url: string) => {
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    if (response.status === 429) {
-      throw new Error('Rate limit exceeded');
-    }
-    throw new Error('Failed to fetch');
-  }
-
-  return response.json();
-};
+// Remove the old fetcher - we'll use the one from swr-config
 
 export function CryptoTable({ initialData, messages }: CryptoTableProps) {
   const { currency, locale } = useSettings();
   const [debouncedCurrency, setDebouncedCurrency] = useState(currency);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
   const debouncedSetCurrency = useCallback(
     debounce((newCurrency: string) => {
@@ -61,21 +59,36 @@ export function CryptoTable({ initialData, messages }: CryptoTableProps) {
     debouncedSetCurrency(currency);
   }, [currency, debouncedSetCurrency]);
 
+  // Get initial data with cache fallback
+  const enhancedInitialData = getInitialData(debouncedCurrency, initialData);
+
   const { data, error, isLoading, mutate } = useSWR(
     `/api/crypto?currency=${debouncedCurrency}`,
-    fetcher,
+    cryptoFetcher,
     {
-      fallbackData: initialData,
-      refreshInterval: 60000, // Increased to 60 seconds to reduce API calls
-      revalidateOnFocus: false, // Disable to reduce API calls
-      revalidateOnReconnect: true,
-      errorRetryCount: 2,
-      errorRetryInterval: 5000,
-      onError: (error) => {
-        console.warn('SWR Error:', error.message);
+      ...cryptoSWRConfig,
+      fallbackData: enhancedInitialData,
+      onSuccess: (data: CryptoCurrency[]) => {
+        // Cache the data manually since we're overriding onSuccess
+        CryptoCache.set(data, debouncedCurrency);
+        // Update last updated timestamp
+        setLastUpdated(new Date());
       },
     },
   );
+
+  // Update last updated time when component mounts
+  useEffect(() => {
+    const cachedTime = CryptoCache.getLastUpdated(debouncedCurrency);
+
+    if (cachedTime) {
+      setLastUpdated(cachedTime);
+    }
+
+    // Enable cache debugging in development
+    CacheDebug.monitorCache();
+    CacheDebug.logCacheStatus(debouncedCurrency);
+  }, [debouncedCurrency]);
 
   const handleRetry = () => {
     mutate();
@@ -112,6 +125,38 @@ export function CryptoTable({ initialData, messages }: CryptoTableProps) {
 
   return (
     <div className='w-full'>
+      {/* Data status header */}
+      {lastUpdated && (
+        <div className='mb-4 p-3 bg-muted/30 rounded-lg border border-border/50'>
+          <div className='flex items-center justify-between text-sm'>
+            <div className='flex items-center space-x-2'>
+              <Clock className='w-4 h-4 text-muted-foreground' />
+              <span className='text-muted-foreground'>{messages.crypto.lastUpdated}:</span>
+              <span className='font-medium'>
+                {lastUpdated.toLocaleString(locale, {
+                  month: 'short',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit',
+                })}
+              </span>
+            </div>
+            <div className='flex items-center space-x-2'>
+              {CryptoCache.isStale(debouncedCurrency) ? (
+                <span className='text-xs px-2 py-1 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200 rounded-full'>
+                  {messages.crypto.dataStatus.cached}
+                </span>
+              ) : (
+                <span className='text-xs px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 rounded-full'>
+                  {messages.crypto.dataStatus.fresh}
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Mobile view */}
       <div aria-label={messages.crypto.title} className='block md:hidden space-y-4' role='list'>
         {cryptoData.map((crypto: CryptoCurrency) => (
@@ -273,6 +318,21 @@ export function CryptoTable({ initialData, messages }: CryptoTableProps) {
         <div className='flex items-center justify-center py-4'>
           <RefreshCw className='w-4 h-4 animate-spin mr-2' />
           <span className='text-sm text-muted-foreground'>{messages.common.loading}</span>
+        </div>
+      )}
+
+      {/* Last updated timestamp */}
+      {lastUpdated && (
+        <div className='flex items-center justify-center py-2 text-xs text-muted-foreground'>
+          <Clock className='w-3 h-3 mr-1' />
+          <span>
+            {messages.crypto.lastUpdated}:{' '}
+            {lastUpdated.toLocaleTimeString(locale, {
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+            })}
+          </span>
         </div>
       )}
     </div>

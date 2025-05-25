@@ -22,6 +22,11 @@
     "rateLimitMessage": "Por favor espera un momento antes de actualizar. Mostrando datos en caché a continuación.",
     "fallbackMessage": "Mostrando datos de respaldo. Por favor intenta de nuevo más tarde.",
     "pleaseWait": "Por favor espera...",
+    "lastUpdated": "Última actualización",
+    "dataStatus": {
+      "fresh": "Actualizado",
+      "cached": "En caché"
+    },
     "demoMode": "Modo demo: Mostrando datos de criptomonedas de ejemplo. Los datos en tiempo real pueden estar limitados debido a límites de velocidad de la API."
   },
   "navigation": {

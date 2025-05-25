@@ -22,6 +22,11 @@
     "rateLimitMessage": "Please wait a moment before refreshing. Showing cached data below.",
     "fallbackMessage": "Showing fallback data. Please try again later.",
     "pleaseWait": "Please wait...",
+    "lastUpdated": "Last updated",
+    "dataStatus": {
+      "fresh": "Fresh",
+      "cached": "Cached"
+    },
     "demoMode": "Demo mode: Showing sample cryptocurrency data. Real-time data may be limited due to API rate limits."
   },
   "navigation": {

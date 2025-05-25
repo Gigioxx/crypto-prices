@@ -25,6 +25,11 @@ export interface Messages {
     rateLimitMessage: string;
     fallbackMessage: string;
     pleaseWait: string;
+    lastUpdated: string;
+    dataStatus: {
+      fresh: string;
+      cached: string;
+    };
     demoMode: string;
   };
   navigation: {
