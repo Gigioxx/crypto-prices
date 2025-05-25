@@ -4,7 +4,6 @@ import type React from 'react';
 import { Inter } from 'next/font/google';
 
 import { LocaleLayout } from '@/components/locale-layout';
-import { PerformanceMonitor } from '@/components/performance-monitor';
 import { SettingsProvider } from '@/components/settings-provider';
 import { ThemeProvider } from '@/components/theme-provider';
 import '@/styles/globals.css';
@@ -47,7 +46,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <SettingsProvider defaultCurrency='USD' defaultLocale='en'>
             <LocaleLayout />
             {children}
-            <PerformanceMonitor />
           </SettingsProvider>
         </ThemeProvider>
       </body>

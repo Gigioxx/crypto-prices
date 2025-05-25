@@ -1,11 +1,12 @@
 'use client';
 
 import { Clock, RefreshCw, TrendingDown, TrendingUp } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import useSWR from 'swr';
 
 import { useSettings } from '@/components/settings-provider';
 import { Button } from '@/components/ui/button';
+import type { Currency } from '@/i18n/config';
 import { CryptoCache } from '@/lib/cache';
 import { CacheDebug } from '@/lib/cache-debug';
 import { cryptoFetcher, cryptoSWRConfig, getInitialData } from '@/lib/swr-config';
@@ -41,34 +42,121 @@ interface CryptoTableProps {
   };
 }
 
-// Remove the old fetcher - we'll use the one from swr-config
+// Memoized crypto row component to prevent unnecessary re-renders
+const CryptoRow = ({
+  crypto,
+  currency,
+  locale,
+}: {
+  crypto: CryptoCurrency;
+  currency: string;
+  locale: string;
+}) => {
+  const priceChangeColor =
+    crypto.price_change_percentage_24h >= 0
+      ? 'text-green-600 dark:text-green-400'
+      : 'text-red-600 dark:text-red-400';
+
+  const TrendIcon = crypto.price_change_percentage_24h >= 0 ? TrendingUp : TrendingDown;
+
+  return (
+    <div
+      className='bg-card border border-border rounded-lg p-4 space-y-3 focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer transition-colors hover:bg-muted/50'
+      role='listitem'
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          // Future: Navigate to crypto detail page
+        }
+      }}
+    >
+      <div className='flex items-center justify-between'>
+        <div className='flex items-center space-x-3'>
+          <img
+            alt={crypto.name}
+            className='w-8 h-8 rounded-full'
+            height={32}
+            loading='lazy'
+            src={crypto.image || '/placeholder.svg'}
+            width={32}
+          />
+          <div>
+            <h3 className='font-semibold text-sm'>{crypto.name}</h3>
+            <p className='text-xs text-muted-foreground uppercase'>{crypto.symbol}</p>
+          </div>
+        </div>
+        <div className='text-right'>
+          <p className='font-semibold'>
+            {formatCurrency(crypto.current_price, currency as Currency, locale)}
+          </p>
+          <div className={`flex items-center justify-end space-x-1 ${priceChangeColor}`}>
+            <TrendIcon className='w-3 h-3' />
+            <span className='text-xs font-medium'>
+              {formatPercentage(crypto.price_change_percentage_24h, locale)}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div className='grid grid-cols-2 gap-4 text-sm'>
+        <div>
+          <p className='text-muted-foreground text-xs'>Rank</p>
+          <p className='font-medium'>#{crypto.market_cap_rank}</p>
+        </div>
+        <div>
+          <p className='text-muted-foreground text-xs'>Market Cap</p>
+          <p className='font-medium'>{formatMarketCap(crypto.market_cap, locale)}</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Memoize the component to prevent unnecessary re-renders
+const MemoizedCryptoRow = ({
+  crypto,
+  currency,
+  locale,
+}: {
+  crypto: CryptoCurrency;
+  currency: string;
+  locale: string;
+}) => {
+  return useMemo(
+    () => <CryptoRow crypto={crypto} currency={currency} locale={locale} />,
+    [crypto, currency, locale],
+  );
+};
 
 export function CryptoTable({ initialData, messages }: CryptoTableProps) {
   const { currency, locale } = useSettings();
   const [debouncedCurrency, setDebouncedCurrency] = useState(currency);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [isHydrated, setIsHydrated] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   // Track hydration to prevent hydration mismatch
   useEffect(() => {
     setIsHydrated(true);
   }, []);
 
+  // Optimized debounced currency setter with transition
   const debouncedSetCurrency = useCallback(
-    debounce((newCurrency: string) => {
-      setDebouncedCurrency(newCurrency as any);
-    }, 1000), // Increased debounce time
-    [],
+    debounce((newCurrency: typeof currency) => {
+      startTransition(() => {
+        setDebouncedCurrency(newCurrency);
+      });
+    }, 800), // Reduced debounce time for better UX
+    [startTransition],
   );
 
   useEffect(() => {
-    debouncedSetCurrency(currency);
+    debouncedSetCurrency(currency as typeof currency);
   }, [currency, debouncedSetCurrency]);
 
-  // Only use enhanced initial data after hydration to prevent mismatch
-  const enhancedInitialData = isHydrated
-    ? getInitialData(debouncedCurrency, initialData)
-    : initialData;
+  // Memoize enhanced initial data
+  const enhancedInitialData = useMemo(() => {
+    return isHydrated ? getInitialData(debouncedCurrency, initialData) : initialData;
+  }, [isHydrated, debouncedCurrency, initialData]);
 
   const { data, error, isLoading, mutate } = useSWR(
     `/api/crypto?currency=${debouncedCurrency}`,
@@ -96,34 +184,64 @@ export function CryptoTable({ initialData, messages }: CryptoTableProps) {
     }
 
     // Enable cache debugging in development
-    CacheDebug.monitorCache();
-    CacheDebug.logCacheStatus(debouncedCurrency);
+    if (process.env.NODE_ENV === 'development') {
+      CacheDebug.monitorCache();
+      CacheDebug.logCacheStatus(debouncedCurrency);
+    }
   }, [debouncedCurrency, isHydrated]);
 
-  const handleRetry = () => {
+  const handleRetry = useCallback(() => {
     mutate();
-  };
+  }, [mutate]);
 
-  if (error) {
+  // Memoize crypto data to prevent unnecessary re-renders
+  const cryptoData = useMemo(() => data || initialData, [data, initialData]);
+
+  // Memoize error state
+  const errorState = useMemo(() => {
+    if (!error) return null;
+
     const isRateLimit = error.message.includes('Rate limit');
 
+    return { isRateLimit };
+  }, [error]);
+
+  // Memoize formatted last updated time
+  const formattedLastUpdated = useMemo(() => {
+    if (!isHydrated || !lastUpdated) return null;
+
+    return lastUpdated.toLocaleString(locale, {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    });
+  }, [isHydrated, lastUpdated, locale]);
+
+  // Memoize cache status
+  const isStale = useMemo(() => {
+    return isHydrated ? CryptoCache.isStale(debouncedCurrency) : false;
+  }, [isHydrated, debouncedCurrency]);
+
+  if (errorState) {
     return (
       <div className='flex flex-col items-center justify-center p-8 text-center'>
         <p className='text-destructive mb-2'>
-          {isRateLimit ? messages.crypto.rateLimitExceeded : messages.crypto.fetchError}
+          {errorState.isRateLimit ? messages.crypto.rateLimitExceeded : messages.crypto.fetchError}
         </p>
         <p className='text-sm text-muted-foreground mb-4'>
-          {isRateLimit ? messages.crypto.rateLimitMessage : messages.crypto.fallbackMessage}
+          {errorState.isRateLimit
+            ? messages.crypto.rateLimitMessage
+            : messages.crypto.fallbackMessage}
         </p>
-        <Button disabled={isRateLimit} variant='outline' onClick={handleRetry}>
+        <Button disabled={errorState.isRateLimit} variant='outline' onClick={handleRetry}>
           <RefreshCw className='w-4 h-4 mr-2' />
-          {isRateLimit ? messages.crypto.pleaseWait : messages.common.retry}
+          {errorState.isRateLimit ? messages.crypto.pleaseWait : messages.common.retry}
         </Button>
       </div>
     );
   }
-
-  const cryptoData = data || initialData;
 
   if (!cryptoData || cryptoData.length === 0) {
     return (
@@ -136,24 +254,21 @@ export function CryptoTable({ initialData, messages }: CryptoTableProps) {
   return (
     <div className='w-full'>
       {/* Data status header - only show after hydration to prevent mismatch */}
-      {isHydrated && lastUpdated && (
+      {isHydrated && formattedLastUpdated && (
         <div className='mb-4 p-3 bg-muted/30 rounded-lg border border-border/50'>
           <div className='flex items-center justify-between text-sm'>
             <div className='flex items-center space-x-2'>
               <Clock className='w-4 h-4 text-muted-foreground' />
               <span className='text-muted-foreground'>{messages.crypto.lastUpdated}:</span>
-              <span className='font-medium'>
-                {lastUpdated.toLocaleString(locale, {
-                  month: 'short',
-                  day: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  second: '2-digit',
-                })}
-              </span>
+              <span className='font-medium'>{formattedLastUpdated}</span>
             </div>
             <div className='flex items-center space-x-2'>
-              {CryptoCache.isStale(debouncedCurrency) ? (
+              {isPending && (
+                <span className='text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-full'>
+                  Updating...
+                </span>
+              )}
+              {isStale ? (
                 <span className='text-xs px-2 py-1 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200 rounded-full'>
                   {messages.crypto.dataStatus.cached}
                 </span>
@@ -170,59 +285,7 @@ export function CryptoTable({ initialData, messages }: CryptoTableProps) {
       {/* Mobile view */}
       <div aria-label={messages.crypto.title} className='block md:hidden space-y-4' role='list'>
         {cryptoData.map((crypto: CryptoCurrency) => (
-          <div
-            key={crypto.id}
-            className='bg-card border border-border rounded-lg p-4 space-y-3 focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer transition-colors hover:bg-muted/50'
-            role='listitem'
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                // Future: Navigate to crypto detail page
-              }
-            }}
-          >
-            <div className='flex items-center justify-between'>
-              <div className='flex items-center space-x-3'>
-                <img
-                  alt={crypto.name}
-                  className='w-8 h-8 rounded-full'
-                  loading='lazy'
-                  src={crypto.image || '/placeholder.svg'}
-                />
-                <div>
-                  <h3 className='font-semibold text-sm'>{crypto.name}</h3>
-                  <p className='text-xs text-muted-foreground uppercase'>{crypto.symbol}</p>
-                </div>
-              </div>
-              <div className='text-right'>
-                <p className='font-semibold'>
-                  {formatCurrency(crypto.current_price, currency, locale)}
-                </p>
-                <div
-                  className={`flex items-center text-xs ${
-                    crypto.price_change_percentage_24h >= 0
-                      ? 'text-green-600 dark:text-green-400'
-                      : 'text-red-600 dark:text-red-400'
-                  }`}
-                >
-                  {crypto.price_change_percentage_24h >= 0 ? (
-                    <TrendingUp className='w-3 h-3 mr-1' />
-                  ) : (
-                    <TrendingDown className='w-3 h-3 mr-1' />
-                  )}
-                  {formatPercentage(crypto.price_change_percentage_24h, locale)}
-                </div>
-              </div>
-            </div>
-            <div className='flex justify-between text-xs text-muted-foreground'>
-              <span>
-                {messages.crypto.rank}: #{crypto.market_cap_rank}
-              </span>
-              <span>
-                {messages.crypto.marketCap}: {formatMarketCap(crypto.market_cap, locale)}
-              </span>
-            </div>
-          </div>
+          <MemoizedCryptoRow key={crypto.id} crypto={crypto} currency={currency} locale={locale} />
         ))}
       </div>
 
@@ -284,8 +347,10 @@ export function CryptoTable({ initialData, messages }: CryptoTableProps) {
                       <img
                         alt={crypto.name}
                         className='w-8 h-8 rounded-full'
+                        height={32}
                         loading='lazy'
                         src={crypto.image || '/placeholder.svg'}
+                        width={32}
                       />
                       <div>
                         <div className='font-semibold'>{crypto.name}</div>
@@ -296,7 +361,7 @@ export function CryptoTable({ initialData, messages }: CryptoTableProps) {
                     </div>
                   </td>
                   <td className='py-4 px-4 text-right font-semibold'>
-                    {formatCurrency(crypto.current_price, currency, locale)}
+                    {formatCurrency(crypto.current_price, currency as Currency, locale)}
                   </td>
                   <td className='py-4 px-4 text-right'>
                     <div
@@ -327,22 +392,7 @@ export function CryptoTable({ initialData, messages }: CryptoTableProps) {
       {isLoading && (
         <div className='flex items-center justify-center py-4'>
           <RefreshCw className='w-4 h-4 animate-spin mr-2' />
-          <span className='text-sm text-muted-foreground'>{messages.common.loading}</span>
-        </div>
-      )}
-
-      {/* Last updated timestamp - only show after hydration to prevent mismatch */}
-      {isHydrated && lastUpdated && (
-        <div className='flex items-center justify-center py-2 text-xs text-muted-foreground'>
-          <Clock className='w-3 h-3 mr-1' />
-          <span>
-            {messages.crypto.lastUpdated}:{' '}
-            {lastUpdated.toLocaleTimeString(locale, {
-              hour: '2-digit',
-              minute: '2-digit',
-              second: '2-digit',
-            })}
-          </span>
+          <span className='text-muted-foreground'>{messages.common.loading}</span>
         </div>
       )}
     </div>
