@@ -24,6 +24,20 @@ export const metadata: Metadata = {
   title: 'Crypto Prices',
   description: 'Real-time cryptocurrency prices and market data',
   manifest: '/manifest.json',
+  icons: {
+    icon: [
+      {
+        url: '/favicon-light.svg',
+        media: '(prefers-color-scheme: light)',
+      },
+      {
+        url: '/favicon-dark.svg',
+        media: '(prefers-color-scheme: dark)',
+      },
+    ],
+    shortcut: '/favicon.svg',
+    apple: [{ url: '/icon-192x192.svg', sizes: '192x192', type: 'image/svg+xml' }],
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
