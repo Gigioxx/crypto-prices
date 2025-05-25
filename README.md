@@ -12,6 +12,9 @@
 
 Crypto-Prices is a sleek, intuitive crypto tracker that puts the market at your fingertips. On launch, it instantly surfaces the top 20 digital assets and lets you switch currencies between USD, EUR or CLP in a single tap. Its clean, mobile-first interface adapts to your preference with a smooth dark/light toggle and offers full English and Spanish support.
 
+![crypto-prices](https://github.com/user-attachments/assets/5f013cd3-566e-4bd3-afd1-837239ad63de)
+
+
 ### ✨ Key Features
 
 - **📱 Responsive Design**: Mobile-first interface that works seamlessly across all devices
