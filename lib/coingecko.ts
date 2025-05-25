@@ -1,15 +1,15 @@
-import type { CryptoCurrency } from "@/types/crypto"
-import type { Currency } from "@/i18n/config"
+import type { Currency } from '@/i18n/config';
+import type { CryptoCurrency } from '@/types/crypto';
 
-const COINGECKO_API_BASE = "https://api.coingecko.com/api/v3"
+const COINGECKO_API_BASE = 'https://api.coingecko.com/api/v3';
 
 // Fallback data for when API is unavailable
 const FALLBACK_DATA: CryptoCurrency[] = [
   {
-    id: "bitcoin",
-    symbol: "btc",
-    name: "Bitcoin",
-    image: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png",
+    id: 'bitcoin',
+    symbol: 'btc',
+    name: 'Bitcoin',
+    image: 'https://assets.coingecko.com/coins/images/1/large/bitcoin.png',
     current_price: 43250,
     market_cap: 847000000000,
     market_cap_rank: 1,
@@ -18,10 +18,10 @@ const FALLBACK_DATA: CryptoCurrency[] = [
     last_updated: new Date().toISOString(),
   },
   {
-    id: "ethereum",
-    symbol: "eth",
-    name: "Ethereum",
-    image: "https://assets.coingecko.com/coins/images/279/large/ethereum.png",
+    id: 'ethereum',
+    symbol: 'eth',
+    name: 'Ethereum',
+    image: 'https://assets.coingecko.com/coins/images/279/large/ethereum.png',
     current_price: 2650,
     market_cap: 318000000000,
     market_cap_rank: 2,
@@ -30,10 +30,10 @@ const FALLBACK_DATA: CryptoCurrency[] = [
     last_updated: new Date().toISOString(),
   },
   {
-    id: "tether",
-    symbol: "usdt",
-    name: "Tether",
-    image: "https://assets.coingecko.com/coins/images/325/large/Tether.png",
+    id: 'tether',
+    symbol: 'usdt',
+    name: 'Tether',
+    image: 'https://assets.coingecko.com/coins/images/325/large/Tether.png',
     current_price: 1.0,
     market_cap: 95000000000,
     market_cap_rank: 3,
@@ -42,10 +42,10 @@ const FALLBACK_DATA: CryptoCurrency[] = [
     last_updated: new Date().toISOString(),
   },
   {
-    id: "binancecoin",
-    symbol: "bnb",
-    name: "BNB",
-    image: "https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png",
+    id: 'binancecoin',
+    symbol: 'bnb',
+    name: 'BNB',
+    image: 'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png',
     current_price: 315,
     market_cap: 47000000000,
     market_cap_rank: 4,
@@ -54,10 +54,10 @@ const FALLBACK_DATA: CryptoCurrency[] = [
     last_updated: new Date().toISOString(),
   },
   {
-    id: "solana",
-    symbol: "sol",
-    name: "Solana",
-    image: "https://assets.coingecko.com/coins/images/4128/large/solana.png",
+    id: 'solana',
+    symbol: 'sol',
+    name: 'Solana',
+    image: 'https://assets.coingecko.com/coins/images/4128/large/solana.png',
     current_price: 98,
     market_cap: 43000000000,
     market_cap_rank: 5,
@@ -66,10 +66,10 @@ const FALLBACK_DATA: CryptoCurrency[] = [
     last_updated: new Date().toISOString(),
   },
   {
-    id: "ripple",
-    symbol: "xrp",
-    name: "XRP",
-    image: "https://assets.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png",
+    id: 'ripple',
+    symbol: 'xrp',
+    name: 'XRP',
+    image: 'https://assets.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png',
     current_price: 0.52,
     market_cap: 28000000000,
     market_cap_rank: 6,
@@ -78,10 +78,10 @@ const FALLBACK_DATA: CryptoCurrency[] = [
     last_updated: new Date().toISOString(),
   },
   {
-    id: "usd-coin",
-    symbol: "usdc",
-    name: "USDC",
-    image: "https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png",
+    id: 'usd-coin',
+    symbol: 'usdc',
+    name: 'USDC',
+    image: 'https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png',
     current_price: 1.0,
     market_cap: 25000000000,
     market_cap_rank: 7,
@@ -90,10 +90,10 @@ const FALLBACK_DATA: CryptoCurrency[] = [
     last_updated: new Date().toISOString(),
   },
   {
-    id: "staked-ether",
-    symbol: "steth",
-    name: "Lido Staked Ether",
-    image: "https://assets.coingecko.com/coins/images/13442/large/steth_logo.png",
+    id: 'staked-ether',
+    symbol: 'steth',
+    name: 'Lido Staked Ether',
+    image: 'https://assets.coingecko.com/coins/images/13442/large/steth_logo.png',
     current_price: 2645,
     market_cap: 24000000000,
     market_cap_rank: 8,
@@ -102,10 +102,10 @@ const FALLBACK_DATA: CryptoCurrency[] = [
     last_updated: new Date().toISOString(),
   },
   {
-    id: "cardano",
-    symbol: "ada",
-    name: "Cardano",
-    image: "https://assets.coingecko.com/coins/images/975/large/cardano.png",
+    id: 'cardano',
+    symbol: 'ada',
+    name: 'Cardano',
+    image: 'https://assets.coingecko.com/coins/images/975/large/cardano.png',
     current_price: 0.45,
     market_cap: 16000000000,
     market_cap_rank: 9,
@@ -114,10 +114,10 @@ const FALLBACK_DATA: CryptoCurrency[] = [
     last_updated: new Date().toISOString(),
   },
   {
-    id: "dogecoin",
-    symbol: "doge",
-    name: "Dogecoin",
-    image: "https://assets.coingecko.com/coins/images/5/large/dogecoin.png",
+    id: 'dogecoin',
+    symbol: 'doge',
+    name: 'Dogecoin',
+    image: 'https://assets.coingecko.com/coins/images/5/large/dogecoin.png',
     current_price: 0.085,
     market_cap: 12000000000,
     market_cap_rank: 10,
@@ -125,38 +125,44 @@ const FALLBACK_DATA: CryptoCurrency[] = [
     total_volume: 800000000,
     last_updated: new Date().toISOString(),
   },
-]
+];
 
-export async function fetchCryptoPrices(currency: Currency = "USD", limit = 20): Promise<CryptoCurrency[]> {
+export async function fetchCryptoPrices(
+  currency: Currency = 'USD',
+  limit = 20,
+): Promise<CryptoCurrency[]> {
   try {
     // Add delay to avoid rate limiting
-    await new Promise((resolve) => setTimeout(resolve, 100))
+    await new Promise((resolve) => setTimeout(resolve, 100));
 
     const response = await fetch(
       `${COINGECKO_API_BASE}/coins/markets?vs_currency=${currency.toLowerCase()}&order=market_cap_desc&per_page=${limit}&page=1&sparkline=false&price_change_percentage=24h`,
       {
         next: { revalidate: 300 }, // Increased to 5 minutes to reduce API calls
         headers: {
-          Accept: "application/json",
-          "User-Agent": "CryptoTracker/1.0",
+          Accept: 'application/json',
+          'User-Agent': 'CryptoTracker/1.0',
         },
       },
-    )
+    );
 
     if (!response.ok) {
       if (response.status === 429) {
-        console.warn("Rate limit exceeded, using fallback data")
-        return adjustPricesForCurrency(FALLBACK_DATA, currency)
+        console.warn('Rate limit exceeded, using fallback data');
+
+        return adjustPricesForCurrency(FALLBACK_DATA, currency);
       }
-      throw new Error(`HTTP error! status: ${response.status}`)
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data = await response.json()
-    return data
+    const data = await response.json();
+
+    return data;
   } catch (error) {
-    console.error("Error fetching crypto prices:", error)
-    console.log("Using fallback data due to API error")
-    return adjustPricesForCurrency(FALLBACK_DATA, currency)
+    console.error('Error fetching crypto prices:', error);
+    console.log('Using fallback data due to API error');
+
+    return adjustPricesForCurrency(FALLBACK_DATA, currency);
   }
 }
 
@@ -166,13 +172,13 @@ function adjustPricesForCurrency(data: CryptoCurrency[], currency: Currency): Cr
     USD: 1,
     EUR: 0.85, // Approximate EUR/USD rate
     CLP: 850, // Approximate CLP/USD rate
-  }
+  };
 
-  const multiplier = multipliers[currency] || 1
+  const multiplier = multipliers[currency] || 1;
 
   return data.map((crypto) => ({
     ...crypto,
     current_price: crypto.current_price * multiplier,
     market_cap: crypto.market_cap * multiplier,
-  }))
+  }));
 }

@@ -7,10 +7,10 @@ const REQUIRED_NODE_VERSION = '22.0.0';
 
 function checkNodeVersion() {
   const currentVersion = process.version;
-  
+
   console.log(`Current Node.js version: ${currentVersion}`);
   console.log(`Required Node.js version: >=${REQUIRED_NODE_VERSION}`);
-  
+
   if (!semver.gte(currentVersion, REQUIRED_NODE_VERSION)) {
     console.error(`\n❌ Error: This project requires Node.js ${REQUIRED_NODE_VERSION} or higher.`);
     console.error(`You are currently using Node.js ${currentVersion}.`);
@@ -20,7 +20,7 @@ function checkNodeVersion() {
     console.error('- Download from: https://nodejs.org/');
     process.exit(1);
   }
-  
+
   console.log('✅ Node.js version requirement satisfied.');
 }
 
@@ -29,4 +29,4 @@ if (require.main === module) {
   checkNodeVersion();
 }
 
-module.exports = { checkNodeVersion }; 
+module.exports = { checkNodeVersion };
