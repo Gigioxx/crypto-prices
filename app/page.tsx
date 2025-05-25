@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 
+import { ClientWrapper } from '@/components/client-wrapper';
 import { CryptoSkeleton } from '@/components/crypto-skeleton';
-import { CryptoTable } from '@/components/crypto-table';
 import { DynamicDemoBanner } from '@/components/dynamic-demo-banner';
 import { DynamicHeader } from '@/components/dynamic-header';
 import { ErrorBoundary } from '@/components/error-boundary';
@@ -40,7 +40,7 @@ async function CryptoData() {
     const messages = getMessagesSync(locale);
     const initialData = await fetchCryptoPrices('USD', 20);
 
-    return <CryptoTable initialData={initialData} messages={messages} />;
+    return <ClientWrapper fallbackMessages={messages} initialData={initialData} />;
   } catch (error) {
     console.error('Failed to fetch initial crypto data:', error);
     const locale = getStaticLocale();

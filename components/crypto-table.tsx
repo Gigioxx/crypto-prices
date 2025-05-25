@@ -47,10 +47,15 @@ const CryptoRow = ({
   crypto,
   currency,
   locale,
+  messages,
 }: {
   crypto: CryptoCurrency;
   currency: string;
   locale: string;
+  messages: {
+    rank: string;
+    marketCap: string;
+  };
 }) => {
   const priceChangeColor =
     crypto.price_change_percentage_24h >= 0
@@ -70,7 +75,7 @@ const CryptoRow = ({
         }
       }}
     >
-      <div className='flex items-center justify-between'>
+      <div className='flex items-start justify-between'>
         <div className='flex items-center space-x-3'>
           <img
             alt={crypto.name}
@@ -83,9 +88,13 @@ const CryptoRow = ({
           <div>
             <h3 className='font-semibold text-sm'>{crypto.name}</h3>
             <p className='text-xs text-muted-foreground uppercase'>{crypto.symbol}</p>
+            <div className='mt-1'>
+              <p className='text-xs text-muted-foreground'>{messages.rank}</p>
+              <p className='text-xs font-medium'>#{crypto.market_cap_rank}</p>
+            </div>
           </div>
         </div>
-        <div className='text-right'>
+        <div className='text-right space-y-1'>
           <p className='font-semibold'>
             {formatCurrency(crypto.current_price, currency as Currency, locale)}
           </p>
@@ -95,16 +104,10 @@ const CryptoRow = ({
               {formatPercentage(crypto.price_change_percentage_24h, locale)}
             </span>
           </div>
-        </div>
-      </div>
-      <div className='grid grid-cols-2 gap-4 text-sm'>
-        <div>
-          <p className='text-muted-foreground text-xs'>Rank</p>
-          <p className='font-medium'>#{crypto.market_cap_rank}</p>
-        </div>
-        <div>
-          <p className='text-muted-foreground text-xs'>Market Cap</p>
-          <p className='font-medium'>{formatMarketCap(crypto.market_cap, locale)}</p>
+          <div className='mt-1'>
+            <p className='text-xs text-muted-foreground'>{messages.marketCap}</p>
+            <p className='text-xs font-medium'>{formatMarketCap(crypto.market_cap, locale)}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -116,14 +119,19 @@ const MemoizedCryptoRow = ({
   crypto,
   currency,
   locale,
+  messages,
 }: {
   crypto: CryptoCurrency;
   currency: string;
   locale: string;
+  messages: {
+    rank: string;
+    marketCap: string;
+  };
 }) => {
   return useMemo(
-    () => <CryptoRow crypto={crypto} currency={currency} locale={locale} />,
-    [crypto, currency, locale],
+    () => <CryptoRow crypto={crypto} currency={currency} locale={locale} messages={messages} />,
+    [crypto, currency, locale, messages],
   );
 };
 
@@ -285,7 +293,16 @@ export function CryptoTable({ initialData, messages }: CryptoTableProps) {
       {/* Mobile view */}
       <div aria-label={messages.crypto.title} className='block md:hidden space-y-4' role='list'>
         {cryptoData.map((crypto: CryptoCurrency) => (
-          <MemoizedCryptoRow key={crypto.id} crypto={crypto} currency={currency} locale={locale} />
+          <MemoizedCryptoRow
+            key={crypto.id}
+            crypto={crypto}
+            currency={currency}
+            locale={locale}
+            messages={{
+              rank: messages.crypto.rank,
+              marketCap: messages.crypto.marketCap,
+            }}
+          />
         ))}
       </div>
 

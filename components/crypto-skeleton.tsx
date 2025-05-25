@@ -46,22 +46,26 @@ export function CryptoSkeleton({ messages, showDataStatus = false }: CryptoSkele
       <div aria-label={ariaLabel} className='block md:hidden space-y-4' role='list'>
         {Array.from({ length: 10 }).map((_, i) => (
           <div key={i} className='bg-card border border-border rounded-lg p-4 space-y-3'>
-            <div className='flex items-center justify-between'>
+            <div className='flex items-start justify-between'>
               <div className='flex items-center space-x-3'>
                 <div className='w-8 h-8 bg-muted rounded-full animate-pulse' />
                 <div className='space-y-1'>
                   <div className='h-4 w-20 bg-muted rounded animate-pulse' />
                   <div className='h-3 w-12 bg-muted rounded animate-pulse' />
+                  <div className='mt-1 space-y-1'>
+                    <div className='h-3 w-8 bg-muted rounded animate-pulse' />
+                    <div className='h-3 w-6 bg-muted rounded animate-pulse' />
+                  </div>
                 </div>
               </div>
               <div className='text-right space-y-1'>
                 <div className='h-4 w-16 bg-muted rounded animate-pulse' />
                 <div className='h-3 w-12 bg-muted rounded animate-pulse' />
+                <div className='mt-1 space-y-1'>
+                  <div className='h-3 w-16 bg-muted rounded animate-pulse' />
+                  <div className='h-3 w-12 bg-muted rounded animate-pulse' />
+                </div>
               </div>
-            </div>
-            <div className='flex justify-between text-xs'>
-              <div className='h-3 w-16 bg-muted rounded animate-pulse' />
-              <div className='h-3 w-20 bg-muted rounded animate-pulse' />
             </div>
           </div>
         ))}
