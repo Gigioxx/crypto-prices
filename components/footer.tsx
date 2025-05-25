@@ -12,9 +12,7 @@ export function Footer({ messages }: FooterProps) {
       <div className='container mx-auto px-4 py-6'>
         <div className='flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0'>
           <div className='text-center md:text-left'>
-            <p className='text-sm text-muted-foreground'>
-              © 2024 Crypto Price Tracker. Built with Next.js 15 & React 19.
-            </p>
+            <p className='text-sm text-muted-foreground'>© 2025 Crypto Prices.</p>
             <p className='text-xs text-muted-foreground mt-1'>Data provided by CoinGecko API</p>
           </div>
 
