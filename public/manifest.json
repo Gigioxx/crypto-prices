@@ -1,6 +1,6 @@
 {
-  "name": "Crypto Price Tracker",
-  "short_name": "CryptoTracker",
+  "name": "Crypto Prices",
+  "short_name": "CryptoPrices",
   "description": "Real-time cryptocurrency prices and market data",
   "start_url": "/",
   "display": "standalone",

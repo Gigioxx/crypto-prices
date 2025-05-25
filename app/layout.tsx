@@ -1,28 +1,33 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import type React from 'react';
 
 import { Inter } from 'next/font/google';
 
-import '@/styles/globals.css';
 import { PerformanceMonitor } from '@/components/performance-monitor';
 import { SettingsProvider } from '@/components/settings-provider';
 import { ThemeProvider } from '@/components/theme-provider';
+import '@/styles/globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
-export const metadata: Metadata = {
-  title: 'Crypto Price Tracker',
-  description: 'Real-time cryptocurrency prices and market data',
-  viewport: 'width=device-width, initial-scale=1, maximum-scale=5',
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: 'white' },
     { media: '(prefers-color-scheme: dark)', color: 'black' },
   ],
+};
+
+export const metadata: Metadata = {
+  title: 'Crypto Prices',
+  description: 'Real-time cryptocurrency prices and market data',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'CryptoTracker',
+    title: 'CryptoPrices',
   },
   formatDetection: {
     telephone: false,

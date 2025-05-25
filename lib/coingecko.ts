@@ -141,7 +141,7 @@ export async function fetchCryptoPrices(
         next: { revalidate: 300 }, // Increased to 5 minutes to reduce API calls
         headers: {
           Accept: 'application/json',
-          'User-Agent': 'CryptoTracker/1.0',
+          'User-Agent': 'CryptoPrices/1.0',
         },
       },
     );

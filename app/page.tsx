@@ -7,24 +7,23 @@ import { ErrorBoundary } from '@/components/error-boundary';
 import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
 import { fetchCryptoPrices } from '@/lib/coingecko';
-
 // Import messages directly for server component
 import enMessages from '@/messages/en.json';
 
 export async function generateMetadata() {
   return {
-    title: 'Crypto Price Tracker - Real-time Cryptocurrency Prices',
+    title: 'Crypto Prices - Real-time Cryptocurrency Prices',
     description:
       'Track real-time cryptocurrency prices and market data with our mobile-first crypto price tracker.',
     keywords: 'cryptocurrency, crypto prices, bitcoin, ethereum, market data, real-time',
     openGraph: {
-      title: 'Crypto Price Tracker',
+      title: 'Crypto Prices',
       description: 'Real-time cryptocurrency prices and market data',
       type: 'website',
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Crypto Price Tracker',
+      title: 'Crypto Prices',
       description: 'Real-time cryptocurrency prices and market data',
     },
   };
