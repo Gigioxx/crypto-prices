@@ -1,0 +1,19 @@
+[install]
+# Auto-install peer dependencies
+auto = true
+
+# Use exact versions for reproducible builds
+exact = true
+
+# Cache directory
+cache = ".bun-cache"
+
+# Prefer offline packages
+prefer-offline = true
+
+[run]
+# Use bun for running scripts
+bun = true
+
+# Silence verbose output
+silent = false 
