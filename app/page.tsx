@@ -65,7 +65,7 @@ export default async function HomePage() {
       <main className='container mx-auto px-4 py-6 flex-1'>
         <DynamicDemoBanner fallbackMessages={messages} />
         <ErrorBoundary>
-          <Suspense fallback={<CryptoSkeleton />}>
+          <Suspense fallback={<CryptoSkeleton messages={messages} />}>
             <CryptoData />
           </Suspense>
         </ErrorBoundary>

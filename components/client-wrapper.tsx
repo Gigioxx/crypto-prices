@@ -21,7 +21,7 @@ export function ClientWrapper({ initialData, fallbackMessages }: ClientWrapperPr
   }, []);
 
   if (!isClient) {
-    return <CryptoSkeleton />;
+    return <CryptoSkeleton messages={fallbackMessages} />;
   }
 
   // Use dynamic messages if available, otherwise fallback to server messages

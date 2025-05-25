@@ -11,7 +11,7 @@ export default async function Loading() {
     <div className='min-h-screen bg-background'>
       <DynamicHeader fallbackMessages={messages} />
       <main className='container mx-auto px-4 py-6'>
-        <CryptoSkeleton />
+        <CryptoSkeleton messages={messages} />
       </main>
     </div>
   );

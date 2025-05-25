@@ -47,6 +47,12 @@ export function CryptoTable({ initialData, messages }: CryptoTableProps) {
   const { currency, locale } = useSettings();
   const [debouncedCurrency, setDebouncedCurrency] = useState(currency);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  // Track hydration to prevent hydration mismatch
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   const debouncedSetCurrency = useCallback(
     debounce((newCurrency: string) => {
@@ -59,8 +65,10 @@ export function CryptoTable({ initialData, messages }: CryptoTableProps) {
     debouncedSetCurrency(currency);
   }, [currency, debouncedSetCurrency]);
 
-  // Get initial data with cache fallback
-  const enhancedInitialData = getInitialData(debouncedCurrency, initialData);
+  // Only use enhanced initial data after hydration to prevent mismatch
+  const enhancedInitialData = isHydrated
+    ? getInitialData(debouncedCurrency, initialData)
+    : initialData;
 
   const { data, error, isLoading, mutate } = useSWR(
     `/api/crypto?currency=${debouncedCurrency}`,
@@ -79,6 +87,8 @@ export function CryptoTable({ initialData, messages }: CryptoTableProps) {
 
   // Update last updated time when component mounts
   useEffect(() => {
+    if (!isHydrated) return; // Don't access localStorage during SSR
+
     const cachedTime = CryptoCache.getLastUpdated(debouncedCurrency);
 
     if (cachedTime) {
@@ -88,7 +98,7 @@ export function CryptoTable({ initialData, messages }: CryptoTableProps) {
     // Enable cache debugging in development
     CacheDebug.monitorCache();
     CacheDebug.logCacheStatus(debouncedCurrency);
-  }, [debouncedCurrency]);
+  }, [debouncedCurrency, isHydrated]);
 
   const handleRetry = () => {
     mutate();
@@ -125,8 +135,8 @@ export function CryptoTable({ initialData, messages }: CryptoTableProps) {
 
   return (
     <div className='w-full'>
-      {/* Data status header */}
-      {lastUpdated && (
+      {/* Data status header - only show after hydration to prevent mismatch */}
+      {isHydrated && lastUpdated && (
         <div className='mb-4 p-3 bg-muted/30 rounded-lg border border-border/50'>
           <div className='flex items-center justify-between text-sm'>
             <div className='flex items-center space-x-2'>
@@ -321,8 +331,8 @@ export function CryptoTable({ initialData, messages }: CryptoTableProps) {
         </div>
       )}
 
-      {/* Last updated timestamp */}
-      {lastUpdated && (
+      {/* Last updated timestamp - only show after hydration to prevent mismatch */}
+      {isHydrated && lastUpdated && (
         <div className='flex items-center justify-center py-2 text-xs text-muted-foreground'>
           <Clock className='w-3 h-3 mr-1' />
           <span>
