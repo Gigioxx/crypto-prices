@@ -37,14 +37,27 @@ export function SettingsProvider({
   const [locale, setLocale] = useState<Locale>(defaultLocale);
 
   useEffect(() => {
-    const storedCurrency = localStorage.getItem('crypto-tracker-currency') as Currency;
-    const storedLocale = localStorage.getItem('crypto-tracker-locale') as Locale;
+    // Helper function to get cookie value
+    const getCookie = (name: string): string | null => {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+
+      if (parts.length === 2) return parts.pop()?.split(';').shift() || null;
+
+      return null;
+    };
+
+    // Check localStorage first, then cookies as fallback
+    const storedCurrency =
+      localStorage.getItem('crypto-prices-currency') || getCookie('crypto-prices-currency');
+    const storedLocale =
+      localStorage.getItem('crypto-prices-locale') || getCookie('crypto-prices-locale');
 
     if (storedCurrency) {
-      setCurrency(storedCurrency);
+      setCurrency(storedCurrency as Currency);
     }
     if (storedLocale) {
-      setLocale(storedLocale);
+      setLocale(storedLocale as Locale);
     }
   }, []);
 
@@ -52,11 +65,15 @@ export function SettingsProvider({
     currency,
     locale,
     setCurrency: (currency: Currency) => {
-      localStorage.setItem('crypto-tracker-currency', currency);
+      localStorage.setItem('crypto-prices-currency', currency);
+      // Also set cookie for server-side access
+      document.cookie = `crypto-prices-currency=${currency}; path=/; max-age=${60 * 60 * 24 * 365}`;
       setCurrency(currency);
     },
     setLocale: (locale: Locale) => {
-      localStorage.setItem('crypto-tracker-locale', locale);
+      localStorage.setItem('crypto-prices-locale', locale);
+      // Also set cookie for server-side access
+      document.cookie = `crypto-prices-locale=${locale}; path=/; max-age=${60 * 60 * 24 * 365}`;
       setLocale(locale);
     },
   };

@@ -1,11 +1,15 @@
 import { CryptoSkeleton } from '@/components/crypto-skeleton';
-import { Header } from '@/components/header';
-import enMessages from '@/messages/en.json';
+import { DynamicHeader } from '@/components/dynamic-header';
+import { getMessagesSync } from '@/lib/messages';
+import { getServerLocale } from '@/lib/server-locale';
 
-export default function Loading() {
+export default async function Loading() {
+  const locale = await getServerLocale();
+  const messages = getMessagesSync(locale);
+
   return (
     <div className='min-h-screen bg-background'>
-      <Header messages={enMessages} />
+      <DynamicHeader fallbackMessages={messages} />
       <main className='container mx-auto px-4 py-6'>
         <CryptoSkeleton />
       </main>

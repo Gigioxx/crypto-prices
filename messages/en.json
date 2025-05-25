@@ -17,7 +17,12 @@
     "currency": "Currency",
     "language": "Language",
     "fetchError": "Failed to fetch cryptocurrency data",
-    "noData": "No cryptocurrency data available"
+    "noData": "No cryptocurrency data available",
+    "rateLimitExceeded": "Rate limit exceeded",
+    "rateLimitMessage": "Please wait a moment before refreshing. Showing cached data below.",
+    "fallbackMessage": "Showing fallback data. Please try again later.",
+    "pleaseWait": "Please wait...",
+    "demoMode": "Demo mode: Showing sample cryptocurrency data. Real-time data may be limited due to API rate limits."
   },
   "navigation": {
     "home": "Home",

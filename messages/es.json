@@ -7,7 +7,7 @@
     "lightMode": "Modo claro"
   },
   "crypto": {
-    "title": "Rastreador de Precios Crypto",
+    "title": "Crypto Prices",
     "description": "Precios de criptomonedas y datos de mercado en tiempo real",
     "rank": "Rango",
     "name": "Nombre",
@@ -17,7 +17,12 @@
     "currency": "Moneda",
     "language": "Idioma",
     "fetchError": "Error al obtener datos de criptomonedas",
-    "noData": "No hay datos de criptomonedas disponibles"
+    "noData": "No hay datos de criptomonedas disponibles",
+    "rateLimitExceeded": "Límite de velocidad excedido",
+    "rateLimitMessage": "Por favor espera un momento antes de actualizar. Mostrando datos en caché a continuación.",
+    "fallbackMessage": "Mostrando datos de respaldo. Por favor intenta de nuevo más tarde.",
+    "pleaseWait": "Por favor espera...",
+    "demoMode": "Modo demo: Mostrando datos de criptomonedas de ejemplo. Los datos en tiempo real pueden estar limitados debido a límites de velocidad de la API."
   },
   "navigation": {
     "home": "Inicio",

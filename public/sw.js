@@ -1,4 +1,4 @@
-const CACHE_NAME = 'crypto-tracker-v1';
+const CACHE_NAME = 'crypto-prices-v1';
 const urlsToCache = ['/', '/api/crypto', 'https://api.coingecko.com/api/v3/coins/markets'];
 
 self.addEventListener('install', (event) => {

@@ -21,6 +21,10 @@ interface CryptoTableProps {
       price: string;
       change24h: string;
       marketCap: string;
+      rateLimitExceeded: string;
+      rateLimitMessage: string;
+      fallbackMessage: string;
+      pleaseWait: string;
     };
     common: {
       retry: string;
@@ -83,16 +87,14 @@ export function CryptoTable({ initialData, messages }: CryptoTableProps) {
     return (
       <div className='flex flex-col items-center justify-center p-8 text-center'>
         <p className='text-destructive mb-2'>
-          {isRateLimit ? 'Rate limit exceeded' : messages.crypto.fetchError}
+          {isRateLimit ? messages.crypto.rateLimitExceeded : messages.crypto.fetchError}
         </p>
         <p className='text-sm text-muted-foreground mb-4'>
-          {isRateLimit
-            ? 'Please wait a moment before refreshing. Showing cached data below.'
-            : 'Showing fallback data. Please try again later.'}
+          {isRateLimit ? messages.crypto.rateLimitMessage : messages.crypto.fallbackMessage}
         </p>
         <Button disabled={isRateLimit} variant='outline' onClick={handleRetry}>
           <RefreshCw className='w-4 h-4 mr-2' />
-          {isRateLimit ? 'Please wait...' : messages.common.retry}
+          {isRateLimit ? messages.crypto.pleaseWait : messages.common.retry}
         </Button>
       </div>
     );

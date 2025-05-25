@@ -2,56 +2,68 @@ import { Suspense } from 'react';
 
 import { CryptoSkeleton } from '@/components/crypto-skeleton';
 import { CryptoTable } from '@/components/crypto-table';
-import { DemoBanner } from '@/components/demo-banner';
+import { DynamicDemoBanner } from '@/components/dynamic-demo-banner';
+import { DynamicHeader } from '@/components/dynamic-header';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Footer } from '@/components/footer';
-import { Header } from '@/components/header';
 import { fetchCryptoPrices } from '@/lib/coingecko';
-// Import messages directly for server component
-import enMessages from '@/messages/en.json';
+import { getMessagesSync } from '@/lib/messages';
+import { getServerLocale } from '@/lib/server-locale';
 
 export async function generateMetadata() {
+  const locale = await getServerLocale();
+  const messages = getMessagesSync(locale);
+
   return {
-    title: 'Crypto Prices - Real-time Cryptocurrency Prices',
-    description:
-      'Track real-time cryptocurrency prices and market data with our mobile-first crypto price tracker.',
-    keywords: 'cryptocurrency, crypto prices, bitcoin, ethereum, market data, real-time',
+    title: `${messages.crypto.title} - ${locale === 'es' ? 'Precios de Criptomonedas en Tiempo Real' : 'Real-time Cryptocurrency Prices'}`,
+    description: messages.crypto.description,
+    keywords:
+      locale === 'es'
+        ? 'criptomonedas, precios crypto, bitcoin, ethereum, datos de mercado, tiempo real'
+        : 'cryptocurrency, crypto prices, bitcoin, ethereum, market data, real-time',
     openGraph: {
-      title: 'Crypto Prices',
-      description: 'Real-time cryptocurrency prices and market data',
+      title: messages.crypto.title,
+      description: messages.crypto.description,
       type: 'website',
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Crypto Prices',
-      description: 'Real-time cryptocurrency prices and market data',
+      title: messages.crypto.title,
+      description: messages.crypto.description,
     },
   };
 }
 
 async function CryptoData() {
   try {
+    const locale = await getServerLocale();
+    const messages = getMessagesSync(locale);
     const initialData = await fetchCryptoPrices('USD', 20);
 
-    return <CryptoTable initialData={initialData} messages={enMessages} />;
+    return <CryptoTable initialData={initialData} messages={messages} />;
   } catch (error) {
     console.error('Failed to fetch initial crypto data:', error);
+    const locale = await getServerLocale();
+    const messages = getMessagesSync(locale);
 
     return (
       <div className='flex items-center justify-center p-8'>
-        <p className='text-destructive'>Failed to load cryptocurrency data</p>
+        <p className='text-destructive'>{messages.crypto.fetchError}</p>
       </div>
     );
   }
 }
 
-export default function HomePage() {
+export default async function HomePage() {
+  const locale = await getServerLocale();
+  const messages = getMessagesSync(locale);
+
   return (
     <div className='min-h-screen bg-background flex flex-col'>
-      <Header messages={enMessages} />
+      <DynamicHeader fallbackMessages={messages} />
 
       <main className='container mx-auto px-4 py-6 flex-1'>
-        <DemoBanner />
+        <DynamicDemoBanner fallbackMessages={messages} />
         <ErrorBoundary>
           <Suspense fallback={<CryptoSkeleton />}>
             <CryptoData />
@@ -59,7 +71,7 @@ export default function HomePage() {
         </ErrorBoundary>
       </main>
 
-      <Footer messages={enMessages} />
+      <Footer messages={messages} />
     </div>
   );
 }

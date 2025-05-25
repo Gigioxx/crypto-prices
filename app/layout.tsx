@@ -3,6 +3,7 @@ import type React from 'react';
 
 import { Inter } from 'next/font/google';
 
+import { LocaleLayout } from '@/components/locale-layout';
 import { PerformanceMonitor } from '@/components/performance-monitor';
 import { SettingsProvider } from '@/components/settings-provider';
 import { ThemeProvider } from '@/components/theme-provider';
@@ -42,8 +43,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html suppressHydrationWarning className='dark' lang='en'>
       <body className={inter.className}>
-        <ThemeProvider defaultTheme='dark' storageKey='crypto-tracker-theme'>
+        <ThemeProvider defaultTheme='dark' storageKey='crypto-prices-theme'>
           <SettingsProvider defaultCurrency='USD' defaultLocale='en'>
+            <LocaleLayout />
             {children}
             <PerformanceMonitor />
           </SettingsProvider>
