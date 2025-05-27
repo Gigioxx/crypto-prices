@@ -17,6 +17,7 @@ export interface Messages {
     price: string;
     change24h: string;
     marketCap: string;
+    volume: string;
     currency: string;
     language: string;
     fetchError: string;
@@ -31,6 +32,51 @@ export interface Messages {
       cached: string;
     };
     demoMode: string;
+  };
+  coinDetail: {
+    backToHome: string;
+    coinNotFound: string;
+    coinNotFoundDescription: string;
+    notFoundReasons: string;
+    reasonIncorrectId: string;
+    reasonDelisted: string;
+    reasonTempIssue: string;
+    tryPopularCoins: string;
+    viewAllCryptos: string;
+    goToHomepage: string;
+    currentPrice: string;
+    marketCapRank: string;
+    volume24h: string;
+    circulatingSupply: string;
+    totalSupply: string;
+    maxSupply: string;
+    allTimeHigh: string;
+    allTimeLow: string;
+    priceChart: string;
+    volumeChart: string;
+    marketCapChart: string;
+    timeframes: {
+      '1': string;
+      '7': string;
+      '30': string;
+      '365': string;
+    };
+    changes: {
+      '24h': string;
+      '7d': string;
+      '30d': string;
+      '1y': string;
+    };
+    statistics: string;
+    about: string;
+    chartError: string;
+    chartRetry: string;
+    fallbackChartData: string;
+    chartLabels: {
+      price: string;
+      volume: string;
+      marketCap: string;
+    };
   };
   navigation: {
     home: string;
