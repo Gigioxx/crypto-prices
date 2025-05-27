@@ -7,18 +7,18 @@ import { Button } from '@/components/ui/button';
 
 interface ErrorBoundaryState {
   hasError: boolean;
-  error?: Error;
+  error: Error | undefined;
 }
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
-  fallback?: React.ComponentType<{ error?: Error; retry: () => void }>;
+  fallback?: React.ComponentType<{ error: Error | undefined; retry: () => void }>;
 }
 
 export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
-    this.state = { hasError: false };
+    this.state = { hasError: false, error: undefined };
   }
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
@@ -45,7 +45,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
   }
 }
 
-function DefaultErrorFallback({ error, retry }: { error?: Error; retry: () => void }) {
+function DefaultErrorFallback({ error, retry }: { error: Error | undefined; retry: () => void }) {
   return (
     <div className='flex flex-col items-center justify-center p-8 text-center space-y-4'>
       <AlertTriangle className='w-12 h-12 text-destructive' />
