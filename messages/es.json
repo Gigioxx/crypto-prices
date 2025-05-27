@@ -7,13 +7,14 @@
     "lightMode": "Modo claro"
   },
   "crypto": {
-    "title": "Crypto Prices",
+    "title": "Precios de Criptomonedas",
     "description": "Precios de criptomonedas y datos de mercado en tiempo real",
     "rank": "Rango",
     "name": "Nombre",
     "price": "Precio",
     "change24h": "Cambio 24h",
     "marketCap": "Cap. de Mercado",
+    "volume": "Volumen",
     "currency": "Moneda",
     "language": "Idioma",
     "fetchError": "Error al obtener datos de criptomonedas",
@@ -24,10 +25,55 @@
     "pleaseWait": "Por favor espera...",
     "lastUpdated": "Última actualización",
     "dataStatus": {
-      "fresh": "Actualizado",
+      "fresh": "Fresco",
       "cached": "En caché"
     },
-    "demoMode": "Modo demo: Mostrando datos de criptomonedas de ejemplo. Los datos en tiempo real pueden estar limitados debido a límites de velocidad de la API."
+    "demoMode": "Modo demo: Mostrando datos de muestra de criptomonedas. Los datos en tiempo real pueden estar limitados debido a los límites de la API."
+  },
+  "coinDetail": {
+    "backToHome": "Volver al Inicio",
+    "coinNotFound": "Moneda no encontrada",
+    "coinNotFoundDescription": "La criptomoneda solicitada no pudo ser encontrada o no existe.",
+    "notFoundReasons": "Esto puede suceder si:",
+    "reasonIncorrectId": "El ID de la moneda es incorrecto o está mal escrito",
+    "reasonDelisted": "La criptomoneda ha sido eliminada de la lista",
+    "reasonTempIssue": "Hay un problema temporal con la fuente de datos",
+    "tryPopularCoins": "Prueba estas criptomonedas populares:",
+    "viewAllCryptos": "Ver Todas las Criptomonedas",
+    "goToHomepage": "Ir al Inicio",
+    "currentPrice": "Precio Actual",
+    "marketCapRank": "Rango de Cap. de Mercado",
+    "volume24h": "Volumen 24h",
+    "circulatingSupply": "Suministro Circulante",
+    "totalSupply": "Suministro Total",
+    "maxSupply": "Suministro Máximo",
+    "allTimeHigh": "Máximo Histórico",
+    "allTimeLow": "Mínimo Histórico",
+    "priceChart": "Gráfico de Precio",
+    "volumeChart": "Gráfico de Volumen",
+    "marketCapChart": "Gráfico de Cap. de Mercado",
+    "timeframes": {
+      "1": "1D",
+      "7": "7D",
+      "30": "1M",
+      "365": "1A"
+    },
+    "changes": {
+      "24h": "24h",
+      "7d": "7d",
+      "30d": "30d",
+      "1y": "1a"
+    },
+    "statistics": "Estadísticas",
+    "about": "Acerca de",
+    "chartError": "Error al cargar datos del gráfico",
+    "chartRetry": "Reintentar carga del gráfico",
+    "fallbackChartData": "Mostrando datos de muestra del gráfico debido a limitaciones de la API",
+    "chartLabels": {
+      "price": "Precio",
+      "volume": "Volumen",
+      "marketCap": "Cap. de Mercado"
+    }
   },
   "navigation": {
     "home": "Inicio",

@@ -14,6 +14,7 @@
     "price": "Price",
     "change24h": "24h Change",
     "marketCap": "Market Cap",
+    "volume": "Volume",
     "currency": "Currency",
     "language": "Language",
     "fetchError": "Failed to fetch cryptocurrency data",
@@ -28,6 +29,51 @@
       "cached": "Cached"
     },
     "demoMode": "Demo mode: Showing sample cryptocurrency data. Real-time data may be limited due to API rate limits."
+  },
+  "coinDetail": {
+    "backToHome": "Back to Home",
+    "coinNotFound": "Coin not found",
+    "coinNotFoundDescription": "The requested cryptocurrency could not be found or does not exist.",
+    "notFoundReasons": "This could happen if:",
+    "reasonIncorrectId": "The coin ID is incorrect or misspelled",
+    "reasonDelisted": "The cryptocurrency has been delisted",
+    "reasonTempIssue": "There's a temporary issue with the data source",
+    "tryPopularCoins": "Try these popular cryptocurrencies:",
+    "viewAllCryptos": "View All Cryptocurrencies",
+    "goToHomepage": "Go to Homepage",
+    "currentPrice": "Current Price",
+    "marketCapRank": "Market Cap Rank",
+    "volume24h": "24h Volume",
+    "circulatingSupply": "Circulating Supply",
+    "totalSupply": "Total Supply",
+    "maxSupply": "Max Supply",
+    "allTimeHigh": "All-Time High",
+    "allTimeLow": "All-Time Low",
+    "priceChart": "Price Chart",
+    "volumeChart": "Volume Chart",
+    "marketCapChart": "Market Cap Chart",
+    "timeframes": {
+      "1": "1D",
+      "7": "7D",
+      "30": "1M",
+      "365": "1Y"
+    },
+    "changes": {
+      "24h": "24h",
+      "7d": "7d",
+      "30d": "30d",
+      "1y": "1y"
+    },
+    "statistics": "Statistics",
+    "about": "About",
+    "chartError": "Failed to load chart data",
+    "chartRetry": "Retry loading chart",
+    "fallbackChartData": "Showing sample chart data due to API limitations",
+    "chartLabels": {
+      "price": "Price",
+      "volume": "Volume",
+      "marketCap": "Market Cap"
+    }
   },
   "navigation": {
     "home": "Home",
