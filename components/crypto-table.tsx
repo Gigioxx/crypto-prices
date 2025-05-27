@@ -1,6 +1,7 @@
 'use client';
 
 import { Clock, RefreshCw, TrendingDown, TrendingUp } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import useSWR from 'swr';
 
@@ -57,6 +58,7 @@ const CryptoRow = ({
     marketCap: string;
   };
 }) => {
+  const router = useRouter();
   const priceChangeColor =
     crypto.price_change_percentage_24h >= 0
       ? 'text-green-600 dark:text-green-400'
@@ -64,16 +66,24 @@ const CryptoRow = ({
 
   const TrendIcon = crypto.price_change_percentage_24h >= 0 ? TrendingUp : TrendingDown;
 
+  const handleNavigation = () => {
+    router.push(`/coins/${crypto.id}?currency=${currency}`);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleNavigation();
+    }
+  };
+
   return (
     <div
       className='bg-card border border-border rounded-lg p-4 space-y-3 focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer transition-colors hover:bg-muted/50'
       role='listitem'
       tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          // Future: Navigate to crypto detail page
-        }
-      }}
+      onClick={handleNavigation}
+      onKeyDown={handleKeyDown}
     >
       <div className='flex items-start justify-between'>
         <div className='flex items-center space-x-3'>
@@ -132,6 +142,81 @@ const MemoizedCryptoRow = ({
   return useMemo(
     () => <CryptoRow crypto={crypto} currency={currency} locale={locale} messages={messages} />,
     [crypto, currency, locale, messages],
+  );
+};
+
+// Desktop table row component with navigation
+const DesktopCryptoRow = ({
+  crypto,
+  currency,
+  locale,
+  messages,
+}: {
+  crypto: CryptoCurrency;
+  currency: string;
+  locale: string;
+  messages: CryptoTableProps['messages'];
+}) => {
+  const router = useRouter();
+
+  const handleNavigation = () => {
+    router.push(`/coins/${crypto.id}?currency=${currency}`);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleNavigation();
+    }
+  };
+
+  return (
+    <tr
+      className='border-b border-border hover:bg-muted/50 focus-within:bg-muted/50 transition-colors cursor-pointer'
+      tabIndex={0}
+      onClick={handleNavigation}
+      onKeyDown={handleKeyDown}
+    >
+      <td className='py-4 px-4'>
+        <span className='text-muted-foreground'>#{crypto.market_cap_rank}</span>
+      </td>
+      <td className='py-4 px-4'>
+        <div className='flex items-center space-x-3'>
+          <img
+            alt={crypto.name}
+            className='w-8 h-8 rounded-full'
+            height={32}
+            loading='lazy'
+            src={crypto.image || '/placeholder.svg'}
+            width={32}
+          />
+          <div>
+            <div className='font-semibold'>{crypto.name}</div>
+            <div className='text-sm text-muted-foreground uppercase'>{crypto.symbol}</div>
+          </div>
+        </div>
+      </td>
+      <td className='py-4 px-4 text-right font-semibold'>
+        {formatCurrency(crypto.current_price, currency as Currency, locale)}
+      </td>
+      <td className='py-4 px-4 text-right'>
+        <div
+          className={`flex items-center justify-end ${
+            crypto.price_change_percentage_24h >= 0
+              ? 'text-green-600 dark:text-green-400'
+              : 'text-red-600 dark:text-red-400'
+          }`}
+        >
+          {crypto.price_change_percentage_24h >= 0 ? (
+            <TrendingUp className='w-4 h-4 mr-1' />
+          ) : (
+            <TrendingDown className='w-4 h-4 mr-1' />
+          )}
+          {formatPercentage(crypto.price_change_percentage_24h, locale)}
+        </div>
+      </td>
+      <td className='py-4 px-4 text-right'>{formatMarketCap(crypto.market_cap, locale)}</td>
+    </tr>
   );
 };
 
@@ -346,60 +431,13 @@ export function CryptoTable({ initialData, messages }: CryptoTableProps) {
             </thead>
             <tbody>
               {cryptoData.map((crypto: CryptoCurrency) => (
-                <tr
+                <DesktopCryptoRow
                   key={crypto.id}
-                  className='border-b border-border hover:bg-muted/50 focus-within:bg-muted/50 transition-colors'
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      // Future: Navigate to crypto detail page
-                    }
-                  }}
-                >
-                  <td className='py-4 px-4'>
-                    <span className='text-muted-foreground'>#{crypto.market_cap_rank}</span>
-                  </td>
-                  <td className='py-4 px-4'>
-                    <div className='flex items-center space-x-3'>
-                      <img
-                        alt={crypto.name}
-                        className='w-8 h-8 rounded-full'
-                        height={32}
-                        loading='lazy'
-                        src={crypto.image || '/placeholder.svg'}
-                        width={32}
-                      />
-                      <div>
-                        <div className='font-semibold'>{crypto.name}</div>
-                        <div className='text-sm text-muted-foreground uppercase'>
-                          {crypto.symbol}
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className='py-4 px-4 text-right font-semibold'>
-                    {formatCurrency(crypto.current_price, currency as Currency, locale)}
-                  </td>
-                  <td className='py-4 px-4 text-right'>
-                    <div
-                      className={`flex items-center justify-end ${
-                        crypto.price_change_percentage_24h >= 0
-                          ? 'text-green-600 dark:text-green-400'
-                          : 'text-red-600 dark:text-red-400'
-                      }`}
-                    >
-                      {crypto.price_change_percentage_24h >= 0 ? (
-                        <TrendingUp className='w-4 h-4 mr-1' />
-                      ) : (
-                        <TrendingDown className='w-4 h-4 mr-1' />
-                      )}
-                      {formatPercentage(crypto.price_change_percentage_24h, locale)}
-                    </div>
-                  </td>
-                  <td className='py-4 px-4 text-right'>
-                    {formatMarketCap(crypto.market_cap, locale)}
-                  </td>
-                </tr>
+                  crypto={crypto}
+                  currency={currency}
+                  locale={locale}
+                  messages={messages}
+                />
               ))}
             </tbody>
           </table>
