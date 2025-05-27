@@ -80,6 +80,7 @@ export function CoinChart({ coinId, initialCurrency, initialTimeFrame, messages 
         if (error?.message?.includes('not found')) {
           return false;
         }
+
         // Retry on network errors and rate limits
         return true;
       },
@@ -210,7 +211,7 @@ function PriceChart({
           />
           <Tooltip
             content={({ active, payload, label }) => {
-              if (active && payload && payload.length) {
+              if (active && payload && payload.length && payload[0]?.value != null) {
                 return (
                   <div className='bg-background border rounded-lg p-3 shadow-lg'>
                     <p className='text-sm font-medium'>{label}</p>
@@ -281,7 +282,7 @@ function VolumeChart({
           />
           <Tooltip
             content={({ active, payload, label }) => {
-              if (active && payload && payload.length) {
+              if (active && payload && payload.length && payload[0]?.value != null) {
                 return (
                   <div className='bg-background border rounded-lg p-3 shadow-lg'>
                     <p className='text-sm font-medium'>{label}</p>
@@ -349,7 +350,7 @@ function MarketCapChart({
           />
           <Tooltip
             content={({ active, payload, label }) => {
-              if (active && payload && payload.length) {
+              if (active && payload && payload.length && payload[0]?.value != null) {
                 return (
                   <div className='bg-background border rounded-lg p-3 shadow-lg'>
                     <p className='text-sm font-medium'>{label}</p>

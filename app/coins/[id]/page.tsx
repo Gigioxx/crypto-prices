@@ -37,16 +37,16 @@ export async function generateMetadata({
 
     return {
       title: `${coinDetail.name} (${coinDetail.symbol.toUpperCase()}) Price | Crypto Prices`,
-      description: `Current ${coinDetail.name} price: ${currentPrice.toLocaleString()} ${currency}. 24h change: ${change24h?.toFixed(2)}%. View detailed charts and statistics.`,
+      description: `Current ${coinDetail.name} price: ${currentPrice?.toLocaleString() ?? 'N/A'} ${currency}. 24h change: ${change24h?.toFixed(2)}%. View detailed charts and statistics.`,
       openGraph: {
         title: `${coinDetail.name} Price`,
-        description: `${coinDetail.name} (${coinDetail.symbol.toUpperCase()}) - ${currentPrice.toLocaleString()} ${currency}`,
+        description: `${coinDetail.name} (${coinDetail.symbol.toUpperCase()}) - ${currentPrice?.toLocaleString() ?? 'N/A'} ${currency}`,
         images: [coinDetail.image.large],
       },
       twitter: {
         card: 'summary',
         title: `${coinDetail.name} Price`,
-        description: `${currentPrice.toLocaleString()} ${currency} (${change24h?.toFixed(2)}%)`,
+        description: `${currentPrice?.toLocaleString() ?? 'N/A'} ${currency} (${change24h?.toFixed(2)}%)`,
         images: [coinDetail.image.large],
       },
     };

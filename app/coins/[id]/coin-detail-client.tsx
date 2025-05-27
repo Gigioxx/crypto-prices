@@ -160,7 +160,7 @@ function CoinHeader({
             ) : (
               <>
                 <div className='text-2xl sm:text-3xl font-bold'>
-                  {currentPrice.toLocaleString()} {currency}
+                  {currentPrice?.toLocaleString() ?? 'N/A'} {currency}
                 </div>
                 <div
                   className={cn(
