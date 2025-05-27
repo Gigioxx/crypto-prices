@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import type React from 'react';
 
+import { Analytics } from '@vercel/analytics/next';
 import { Inter } from 'next/font/google';
 
 import { LocaleLayout } from '@/components/locale-layout';
@@ -62,6 +63,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {children}
           </SettingsProvider>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
