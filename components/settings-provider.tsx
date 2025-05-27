@@ -64,17 +64,17 @@ export function SettingsProvider({
   const value = {
     currency,
     locale,
-    setCurrency: (currency: Currency) => {
-      localStorage.setItem('crypto-prices-currency', currency);
+    setCurrency: (newCurrency: Currency) => {
+      localStorage.setItem('crypto-prices-currency', newCurrency);
       // Also set cookie for server-side access
-      document.cookie = `crypto-prices-currency=${currency}; path=/; max-age=${60 * 60 * 24 * 365}`;
-      setCurrency(currency);
+      document.cookie = `crypto-prices-currency=${newCurrency}; path=/; max-age=${60 * 60 * 24 * 365}`;
+      setCurrency(newCurrency);
     },
-    setLocale: (locale: Locale) => {
-      localStorage.setItem('crypto-prices-locale', locale);
+    setLocale: (newLocale: Locale) => {
+      localStorage.setItem('crypto-prices-locale', newLocale);
       // Also set cookie for server-side access
-      document.cookie = `crypto-prices-locale=${locale}; path=/; max-age=${60 * 60 * 24 * 365}`;
-      setLocale(locale);
+      document.cookie = `crypto-prices-locale=${newLocale}; path=/; max-age=${60 * 60 * 24 * 365}`;
+      setLocale(newLocale);
     },
   };
 
